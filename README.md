@@ -264,10 +264,10 @@ Project ini menggunakan lisensi **MIT**. Lihat file `LICENSE` untuk detail lebih
 
 Dibuat dengan ❤️ oleh **[Your Name]**
 
-- 🌐 Website: [yourwebsite.com](https://yourwebsite.com)
-- 📧 Email: your.email@example.com
-- 💼 LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
-- 🐙 GitHub: [@yourusername](https://github.com/yourusername)
+- 🌐 Website: [[yourwebsite.com](https://yourwebsite.com)](https://shinerking.github.io/)
+- 📧 Email: abimanyuriantoputra@gmail.com
+- 💼 LinkedIn: [[Your LinkedIn](https://linkedin.com/in/yourprofile)](https://www.linkedin.com/in/abimanyu-rianto-putra-277966318)
+- 🐙 GitHub: [[@yourusername](https://github.com/yourusername)](https://github.com/shinerking/)
 
 ---
 
