@@ -262,7 +262,7 @@ Project ini menggunakan lisensi **MIT**. Lihat file `LICENSE` untuk detail lebih
 
 ## 👨‍💻 Developer
 
-Dibuat dengan ❤️ oleh **[Your Name]**
+Dibuat dengan ❤️ oleh **Abimanyu R Putra**
 
 - 🌐 Website: (https://shinerking.github.io/)
 - 📧 Email: abimanyuriantoputra@gmail.com
