@@ -1,19 +1,18 @@
-
-# 🚀 NexusFlow
-
 <div align="center">
 
-![NexusFlow Banner](https://via.placeholder.com/1200x300/0f172a/60a5fa?text=NexusFlow+-+Enterprise+Inventory+System)
+#  NEXUS FLOW
+### **Enterprise Inventory System with Internal Control & AI**
 
-**Sistem Manajemen Inventaris Enterprise dengan Internal Control & AI**
+---
 
-[![Next.js](https://img.shields.io/badge/Next.js-14.1.0-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Prisma](https://img.shields.io/badge/Prisma-5.10.0-2D3748?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
+[![Vercel Deployment](https://img.shields.io/badge/Live_Demo-NexusFlow-60a5fa?style=for-the-badge&logo=vercel&logoColor=white)](https://nexusflow-xlih.vercel.app/login)
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![Database](https://img.shields.io/badge/Database-PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![AI Integration](https://img.shields.io/badge/AI_Powered-Gemini-orange?style=for-the-badge&logo=google-gemini&logoColor=white)](https://ai.google.dev/)
 
-[Demo](https://nexusflow-xlih.vercel.app/login) • [Fitur](#-fitur-utama) • [Instalasi](#-instalasi) • [Tech Stack](#-tech-stack)
+**Secure • Smart • Scalable**
+
+---
 
 </div>
 
