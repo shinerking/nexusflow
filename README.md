@@ -156,19 +156,31 @@ Gunakan kredensial ini untuk mencoba berbagai fitur berdasarkan role:
 
 ---
 
-## 📸 Screenshot
+## 📸 Galeri Tampilan (Screenshots)
 
-### 🖥️ Manager Dashboard
+Berikut adalah tampilan antarmuka NexusFlow yang dirancang dengan mode gelap (*Dark Mode*) untuk kenyamanan visual dan nuansa profesional.
 
-> *Dashboard real-time dengan ringkasan finansial dan grafik performa stok.*
+### 1. Manager Dashboard (Executive View)
+Pusat kendali utama bagi Manager. Menampilkan data krusial seperti **Total Asset Value**, **Revenue**, dan grafik tren stok.
+![Manager Dashboard](./docs/manager-dashboard.png)
+> *Dashboard Manager memiliki akses penuh ke data finansial dan statistik global.*
 
-### ⚡ Approval Queue (Maker-Checker)
+### 2. Approval Workflow (Maker-Checker System)
+Fitur unggulan NexusFlow. Setiap perubahan stok yang dilakukan Staff masuk ke antrean ini. Manager dapat melihat detail, menyetujui, atau menolak dengan **Alasan Penolakan** (*Rejection Reason*).
+![Approval Modal](./docs/approval-modal.png)
+> *Modal konfirmasi kustom dengan fitur input alasan penolakan untuk audit trail.*
 
-> *Manager harus menyetujui atau menolak (dengan alasan) setiap permintaan stok dari Staff.*
+### 3. Staff View (Restricted Access)
+Tampilan khusus Staff Gudang. Perhatikan bahwa kartu **Revenue** dan **Total Value** disembunyikan secara otomatis demi keamanan data perusahaan (*Role-Based Access Control*).
+![Staff Dashboard](./docs/staff-view.png)
+> *Antarmuka Staff yang bersih, fokus pada operasional tanpa akses ke data sensitif.*
 
-### 📱 Staff History View
+### 4. Staff History & Weekly Summary
+Halaman transparansi bagi Staff untuk memantau status pengajuan mereka (Approved/Rejected) serta melihat ringkasan kinerja mingguan mereka.
+![Staff History](./docs/staff-history.png)
+> *Staff dapat belajar dari kesalahan melalui catatan penolakan yang tertera di history.*
 
-> *Tampilan khusus Staff untuk memantau status pengajuan (Approved/Rejected).*
+---
 
 ---
 
