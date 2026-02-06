@@ -60,10 +60,10 @@ export default function LoginPage() {
           {/* Login Form */}
           <LoginForm />
 
-          {/* Footer */}
-          <div className="mt-6 text-center">
-            <p className="text-xs text-slate-400">
-              Powered by AI Technology
+          {/* Watermark */}
+          <div className="fixed bottom-2 md:bottom-2 left-0 right-0 flex justify-center pointer-events-none px-4 z-50">
+            <p className="pointer-events-auto cursor-default text-[9px] md:text-[10px] tracking-[0.25em] transition-all duration-500 ease-in-out opacity-25 hover:opacity-90 hover:tracking-[0.35em] text-slate-300 font-light">
+              Developed by <span className="text-indigo-300">Abimanyu R P</span>
             </p>
           </div>
         </div>
