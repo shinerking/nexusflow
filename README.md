@@ -1,3 +1,4 @@
+
 # 🚀 NexusFlow
 
 <div align="center">
@@ -10,6 +11,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Prisma](https://img.shields.io/badge/Prisma-5.10.0-2D3748?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
 
 [Demo](#-screenshot) • [Fitur](#-fitur-utama) • [Instalasi](#-instalasi) • [Tech Stack](#-tech-stack)
 
@@ -19,37 +21,36 @@
 
 ## 📖 Tentang NexusFlow
 
-**NexusFlow** bukan sekadar aplikasi pencatatan stok biasa. Ini adalah solusi **Enterprise Resource Planning (ERP)** modern yang dirancang untuk menjaga integritas aset perusahaan. Dibangun dengan filosofi **"Internal Control"**, NexusFlow menerapkan alur kerja yang ketat untuk mencegah kecurangan (*fraud*) dan kesalahan input (*human error*) di gudang.
+**NexusFlow** adalah solusi **Enterprise Resource Planning (ERP)** modern yang dirancang untuk menjaga integritas aset perusahaan. Dibangun dengan filosofi **"Internal Control"**, NexusFlow mentransformasi cara perusahaan mengelola gudang dengan mencegah kecurangan (*fraud*) dan kesalahan manusia (*human error*).
 
-### 🎯 Mengapa NexusFlow Berbeda?
+Berbeda dengan aplikasi inventaris biasa, NexusFlow menerapkan **Sistem Maker-Checker**, di mana setiap perubahan data sensitif harus melalui validasi bertingkat sebelum mempengaruhi stok fisik.
 
-- 🛡️ **Maker-Checker Workflow** - Setiap perubahan stok oleh Staff wajib melalui persetujuan Manager.
-- 🔐 **Role-Based Security** - Data finansial sensitif hanya bisa dilihat oleh level manajemen.
-- ⚡ **Real-time Approval** - Notifikasi instan tanpa refresh untuk mempercepat pengambilan keputusan.
-- 🤖 **AI-Powered Analytics** - Analisis otomatis terhadap pola stok dan peringatan dini.
+### 🎯 Mengapa NexusFlow?
+
+- 🛡️ **Maker-Checker Workflow** - Input dari Staff tidak mengubah stok langsung, melainkan masuk ke antrean persetujuan Manager.
+- 🔐 **Role-Based Security (RBAC)** - Pemisahan akses data yang ketat. Staff operasional tidak dapat melihat data finansial sensitif.
+- 🤖 **AI-Powered Analytics** - Analisis otomatis menggunakan Google Gemini AI untuk mendeteksi anomali dan rekomendasi stok.
+- ⚡ **Real-time Experience** - Notifikasi instan dan pembaruan status tanpa *page reload*.
 
 ---
 
 ## ✨ Fitur Utama
 
 ### 🛡️ Keamanan & Kontrol (Enterprise Grade)
-- **Role-Based Access Control (RBAC):** Pemisahan hak akses yang ketat antara **Manager**, **Staff**, dan **Auditor**.
-- **Approval Queue:** Input Staff masuk ke antrean "Pending Review" dan tidak mengubah stok fisik sebelum disetujui.
-- **Audit Trail (Log):** Riwayat aktivitas permanen yang mencatat Siapa, Kapan, dan Mengapa stok berubah.
+- **Role-Based Access Control:** Hak akses spesifik untuk **Manager** (Full Access), **Staff** (Operational), dan **Auditor** (Read-Only).
+- **Approval Queue System:** Mekanisme "Pending Review" untuk setiap penambahan atau pengurangan stok (Adjustment).
+- **Audit Trail (Log):** Pencatatan riwayat aktivitas yang permanen dan transparan (Siapa, Kapan, Mengapa).
 
 ### ⚡ Produktivitas & UX
-- **Real-time Notifications:** Manager menerima notifikasi Toast & Email instan saat ada request baru.
-- **Interactive Dashboard:** Visualisasi nilai aset, grafik distribusi kategori, dan indikator *Low Stock*.
-- **Custom Modals:** Antarmuka persetujuan modern dengan input alasan penolakan (Rejection Reason).
-- **History & Performance:** Halaman khusus Staff untuk memantau status pengajuan dan ringkasan kinerja mingguan.
+- **Real-time Notifications:** Integrasi `Sonner` (Toast) dan Email Alert untuk pemberitahuan instan kepada Manager.
+- **Interactive Dashboard:** Visualisasi nilai aset, grafik tren stok, dan peringatan *Low Stock* secara real-time.
+- **Custom Modals:** Antarmuka persetujuan modern dengan fitur input alasan penolakan (*Rejection Reason*).
+- **Staff History:** Halaman khusus bagi staff untuk memantau status pengajuan mereka dan ringkasan kinerja mingguan.
 
-### 🧠 Analisis Cerdas (Google Gemini AI)
-- Deteksi anomali pada pergerakan stok yang mencurigakan.
-- Rekomendasi *Restock* cerdas berdasarkan tren pemakaian historis.
-
-### 📁 Manajemen Data
-- **Bulk Import/Export:** Dukungan penuh untuk file Excel (.xlsx) dan PDF Reporting.
-- **Smart Sorting & Filtering:** Navigasi ribuan data barang dengan mudah.
+### 📊 Manajemen Data Cerdas
+- **AI Analytics:** Integrasi Google Gemini untuk memberikan insight pengadaan barang.
+- **Smart Sorting & Filtering:** Navigasi ribuan data inventaris dengan mudah.
+- **Import/Export:** Dukungan penuh untuk Import Excel dan Export Laporan PDF/Excel.
 
 ---
 
@@ -60,23 +61,173 @@
 - **[TypeScript](https://www.typescriptlang.org/)** - Type-safe development
 - **[Tailwind CSS](https://tailwindcss.com/)** & **[Shadcn UI](https://ui.shadcn.com/)** - Modern styling
 - **[Framer Motion](https://www.framer.com/motion/)** - Smooth animations
-- **[Sonner](https://sonner.emilkowal.ski/)** - High-performance toast notifications
+- **[Recharts](https://recharts.org/)** - Data visualization
 
 ### Backend & Database
 - **[Prisma ORM](https://www.prisma.io/)** - Database management
-- **[PostgreSQL](https://www.postgresql.org/)** - Primary database (via Supabase/Neon)
+- **[PostgreSQL](https://www.postgresql.org/)** - Primary database (via Supabase)
 - **[Resend](https://resend.com/)** - Transactional Email API
-
-### AI Integration
-- **[Google Gemini API](https://ai.google.dev/)** - Generative AI for analytics
+- **[Google Gemini API](https://ai.google.dev/)** - Generative AI Service
 
 ---
 
-## 📦 Instalasi Lokal
+## 📦 Instalasi
 
-Ikuti langkah ini untuk menjalankan project di komputer Anda:
+### Prasyarat
+Pastikan Anda telah menginstall:
+- Node.js (v18+)
+- Git
+- PostgreSQL Database (Local atau Cloud seperti Supabase/Neon)
 
-### 1️⃣ Clone Repository
+### Langkah-langkah
+
+#### 1️⃣ Clone Repository
 ```bash
 git clone [https://github.com/shinerking/nexusflow.git](https://github.com/shinerking/nexusflow.git)
 cd nexusflow
+
+```
+
+#### 2️⃣ Install Dependencies
+
+```bash
+npm install
+# atau
+yarn install
+
+```
+
+#### 3️⃣ Setup Environment Variables
+
+Buat file `.env` di root project dan isi konfigurasi berikut:
+
+```env
+# Database (Supabase/Postgres)
+DATABASE_URL="postgresql://user:password@host:5432/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://user:password@host:5432/postgres"
+
+# Authentication & Security
+NEXTAUTH_SECRET="rahasia_dapur_nexusflow"
+NEXTAUTH_URL="http://localhost:3000"
+
+# AI & Services
+GEMINI_API_KEY="your_gemini_api_key"
+RESEND_API_KEY="your_resend_api_key"
+
+# Email Config
+NOTIFICATION_EMAIL="admin@nexusflow.com"
+
+```
+
+#### 4️⃣ Setup Database
+
+```bash
+# Generate Prisma Client
+npx prisma generate
+
+# Push schema ke database
+npx prisma migrate dev
+
+# (Opsional) Isi data dummy untuk testing
+npx prisma db seed
+
+```
+
+#### 5️⃣ Jalankan Server
+
+```bash
+npm run dev
+
+```
+
+Buka browser dan akses [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000) 🎉
+
+---
+
+## 👥 Akun Demo (Seeding)
+
+Gunakan kredensial ini untuk mencoba berbagai fitur berdasarkan role:
+
+| Role | Email | Password | Fitur yang Bisa Diakses |
+| --- | --- | --- | --- |
+| **👑 Manager** | `manager@nexusflow.com` | `password123` | Full Access, Approvals, Analytics, User Mgmt. |
+| **👷 Staff** | `staff@nexusflow.com` | `password123` | Request Stock, History, No Financial Data. |
+| **🔍 Auditor** | `auditor@nexusflow.com` | `password123` | Read-Only Logs & Reports. |
+
+---
+
+## 📸 Screenshot
+
+### 🖥️ Manager Dashboard
+
+> *Dashboard real-time dengan ringkasan finansial dan grafik performa stok.*
+
+### ⚡ Approval Queue (Maker-Checker)
+
+> *Manager harus menyetujui atau menolak (dengan alasan) setiap permintaan stok dari Staff.*
+
+### 📱 Staff History View
+
+> *Tampilan khusus Staff untuk memantau status pengajuan (Approved/Rejected).*
+
+---
+
+## 📁 Struktur Project
+
+```
+nexusflow/
+├── prisma/
+│   └── schema.prisma      # Database Schema & Models
+├── src/
+│   ├── app/
+│   │   ├── actions/       # Server Actions (Backend Logic)
+│   │   ├── api/           # API Routes
+│   │   ├── (dashboard)/   # Protected Routes
+│   │   └── layout.tsx     # Root Layout
+│   ├── components/
+│   │   ├── ui/            # Shadcn UI Components
+│   │   ├── dashboard/     # Charts & Stats Cards
+│   │   └── modals/        # Approval/Reject Modals
+│   └── lib/
+│       ├── db.ts          # Prisma Client Singleton
+│       └── gemini.ts      # AI Configuration
+└── public/                # Static Assets
+
+```
+
+---
+
+## 🤝 Kontribusi
+
+Kontribusi selalu diterima! Jika Anda ingin berkontribusi:
+
+1. Fork repository ini
+2. Buat branch baru (`git checkout -b feature/FiturBaru`)
+3. Commit perubahan (`git commit -m 'Add fitur baru'`)
+4. Push ke branch (`git push origin feature/FiturBaru`)
+5. Buat Pull Request
+
+---
+
+## 👨‍💻 Developer
+
+Dibuat dengan ❤️ oleh **Abimanyu R Putra**
+
+* 🌐 Website: [shinerking.github.io](https://shinerking.github.io/)
+* 📧 Email: abimanyuriantoputra@gmail.com
+* 💼 LinkedIn: [Abimanyu Rianto Putra](https://www.linkedin.com/in/abimanyu-rianto-putra-277966318)
+* 🐙 GitHub: [@shinerking](https://github.com/shinerking/)
+
+---
+
+<div align="center">
+
+**⭐ Jangan lupa beri star pada repository ini jika bermanfaat! ⭐**
+
+Made by NexusFlow Team
+
+</div>
+
+```
+
+```
