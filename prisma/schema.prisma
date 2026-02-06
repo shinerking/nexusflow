@@ -1,0 +1,80 @@
+// NexusFlow - Multi-tenant SaaS
+// Prisma Schema for PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  STAFF
+}
+
+enum ProcurementStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Organization {
+  id          String        @id @default(cuid())
+  name        String
+  slug        String        @unique
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  users       User[]
+  products    Product[]
+  procurements Procurement[]
+}
+
+model User {
+  id             String       @id @default(cuid())
+  name           String
+  email          String
+  role           Role
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([email, organizationId])
+  @@index([organizationId])
+}
+
+model Product {
+  id             String       @id @default(cuid())
+  name           String
+  price          Decimal?     @db.Decimal(10, 2)
+  stock          Int          @default(0)
+  category       String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([organizationId])
+  @@index([category])
+}
+
+model Procurement {
+  id             String            @id @default(cuid())
+  title          String
+  description    String?
+  status         ProcurementStatus @default(PENDING)
+  totalAmount    Decimal           @db.Decimal(15, 2)
+  aiAnalysis     Json?
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@index([organizationId])
+  @@index([status])
+}
