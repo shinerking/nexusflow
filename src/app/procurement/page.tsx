@@ -1,7 +1,9 @@
 import AppLayout from "@/components/layout/AppLayout";
 import NewRequestModal from "@/components/procurement/NewRequestModal";
 import ProcurementActions from "@/components/procurement/ProcurementActions";
+import RoleGuard from "@/components/auth/RoleGuard";
 import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/app/actions/auth";
 
 async function getProcurements() {
   return prisma.procurement.findMany({
@@ -62,13 +64,14 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default async function ProcurementPage() {
-  const [procurements, org] = await Promise.all([
+  const [procurements, org, currentUser] = await Promise.all([
     getProcurements(),
     prisma.organization.findFirst(),
+    getCurrentUser(),
   ]);
 
   return (
-    <AppLayout orgName={org?.name ?? "NexusFlow"}>
+    <AppLayout orgName={org?.name ?? "NexusFlow"} currentUser={currentUser}>
       <div className="flex-1 p-4 sm:p-6">
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
@@ -79,7 +82,9 @@ export default async function ProcurementPage() {
               Smart procurement requests with AI assistance
             </p>
           </div>
-          <NewRequestModal />
+          <RoleGuard userRole={currentUser?.role} action="CREATE_PROCUREMENT">
+            <NewRequestModal />
+          </RoleGuard>
         </div>
 
         <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
@@ -132,7 +137,9 @@ export default async function ProcurementPage() {
                         <PriorityBadge priority={priority} />
                       </td>
                       <td className="px-4 py-3 sm:px-6">
-                        <ProcurementActions id={row.id} status={row.status} />
+                        <RoleGuard userRole={currentUser?.role} action="APPROVE_PROCUREMENT">
+                          <ProcurementActions id={row.id} status={row.status} />
+                        </RoleGuard>
                       </td>
                     </tr>
                   );

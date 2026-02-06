@@ -1,7 +1,10 @@
 import AppLayout from "@/components/layout/AppLayout";
 import SettingsForm from "@/components/settings/SettingsForm";
 import DeleteInventoryButton from "@/components/settings/DeleteInventoryButton";
+import RoleGuard from "@/components/auth/RoleGuard";
 import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/app/actions/auth";
+import { redirect } from "next/navigation";
 
 async function getSettingsData() {
   const user = await prisma.user.findFirst({
@@ -13,7 +16,15 @@ async function getSettingsData() {
 }
 
 export default async function SettingsPage() {
-  const { user, org } = await getSettingsData();
+  const [{ user, org }, currentUser] = await Promise.all([
+    getSettingsData(),
+    getCurrentUser(),
+  ]);
+
+  // Restrict access to MANAGER and ADMIN only
+  if (!currentUser || !["MANAGER", "ADMIN"].includes(currentUser.role)) {
+    redirect("/");
+  }
 
   if (!user) {
     return (
@@ -24,7 +35,7 @@ export default async function SettingsPage() {
   }
 
   return (
-    <AppLayout orgName={org?.name ?? "NexusFlow"}>
+    <AppLayout orgName={org?.name ?? "NexusFlow"} currentUser={currentUser}>
       <div className="flex-1 p-4 sm:p-6">
         <div className="mb-6">
           <h1 className="text-xl font-semibold text-slate-900 sm:text-2xl">Settings</h1>
@@ -39,13 +50,17 @@ export default async function SettingsPage() {
             orgId={org?.id ?? ""}
             userName={user.name}
             organizationName={org?.name ?? ""}
+            // @ts-ignore - Ignore TS error until types are regenerated
+            emailNotifications={user.emailNotifications ?? true}
           />
         </div>
 
         {/* Danger Zone */}
-        <div className="mt-8 max-w-xl">
-          <DeleteInventoryButton />
-        </div>
+        <RoleGuard userRole={currentUser?.role} action="DANGER_ZONE">
+          <div className="mt-8 max-w-xl">
+            <DeleteInventoryButton />
+          </div>
+        </RoleGuard>
       </div>
     </AppLayout>
   );

@@ -8,6 +8,7 @@ type Props = {
   orgId: string;
   userName: string;
   organizationName: string;
+  emailNotifications: boolean;
 };
 
 export default function SettingsForm({
@@ -15,6 +16,7 @@ export default function SettingsForm({
   orgId,
   userName,
   organizationName,
+  emailNotifications,
 }: Props) {
   const [state, formAction, isPending] = useActionState(updateSettings, null);
 
@@ -75,6 +77,31 @@ export default function SettingsForm({
           className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
           disabled={isPending}
         />
+      </div>
+
+      <div className="flex items-start gap-3 rounded-lg border border-slate-200 p-4">
+        <div className="flex h-5 items-center">
+          <input
+            id="emailNotifications"
+            name="emailNotifications"
+            type="checkbox"
+            value="true"
+            defaultChecked={emailNotifications}
+            className="h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900"
+            disabled={isPending}
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="emailNotifications"
+            className="text-sm font-medium text-slate-900"
+          >
+            Email Notifications
+          </label>
+          <p className="text-sm text-slate-500">
+            Receive email notifications when staff submit approval requests.
+          </p>
+        </div>
       </div>
 
       <button

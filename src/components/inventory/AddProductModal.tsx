@@ -62,6 +62,15 @@ export default function AddProductModal() {
                 </div>
               )}
 
+              {state?.success && state?.message && (
+                <div className={`rounded-lg px-3 py-2 text-sm ${state.status === "PENDING"
+                    ? "bg-amber-50 text-amber-700"
+                    : "bg-emerald-50 text-emerald-700"
+                  }`}>
+                  {state.message}
+                </div>
+              )}
+
               <div>
                 <label
                   htmlFor="product-name"

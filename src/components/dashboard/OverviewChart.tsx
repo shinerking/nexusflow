@@ -19,8 +19,8 @@ export default function OverviewChart({ chartData }: { chartData: ChartData[] })
   // If no data, show placeholder
   if (!chartData || chartData.length === 0) {
     return (
-      <div className="flex h-80 w-full items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50">
-        <p className="text-slate-500">No inventory data available</p>
+      <div className="flex h-80 w-full items-center justify-center rounded-lg border border-dashed border-border bg-card">
+        <p className="text-muted-foreground">No inventory data available</p>
       </div>
     );
   }
@@ -34,29 +34,31 @@ export default function OverviewChart({ chartData }: { chartData: ChartData[] })
         >
           <CartesianGrid
             strokeDasharray="3 3"
-            stroke="#e2e8f0"
+            stroke="hsl(var(--border))"
             vertical={false}
           />
           <XAxis
             dataKey="category"
-            tick={{ fill: "#64748b", fontSize: 12 }}
-            axisLine={{ stroke: "#e2e8f0" }}
+            tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+            axisLine={{ stroke: "hsl(var(--border))" }}
             tickLine={false}
           />
           <YAxis
-            tick={{ fill: "#64748b", fontSize: 12 }}
+            tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
             axisLine={false}
             tickLine={false}
             tickFormatter={(v) => `${v}`}
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: "white",
-              border: "1px solid #e2e8f0",
+              backgroundColor: "hsl(var(--popover))",
+              border: "1px solid hsl(var(--border))",
               borderRadius: "8px",
               boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+              color: "hsl(var(--popover-foreground))",
             }}
-            labelStyle={{ color: "#0f172a" }}
+            labelStyle={{ color: "hsl(var(--foreground))" }}
+            cursor={{ fill: "hsl(var(--muted))", opacity: 0.4 }}
             formatter={(value: number | undefined) => [`${value || 0} units`, "Stock"]}
           />
           <Bar

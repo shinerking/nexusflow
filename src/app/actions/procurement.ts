@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { analyzeRequest } from "@/lib/gemini";
-import { sendApprovalEmail } from "@/lib/mail";
+import { sendApprovalEmail, sendProcurementRequestEmail } from "@/lib/mail";
 
 export type ProcurementAnalysis = {
   name: string;
@@ -61,9 +61,9 @@ export async function createProcurement(
     return { error: "No organization found. Please run seed first." };
   }
 
-  const validPriority = ["LOW", "MEDIUM", "HIGH"].includes(priority || "") 
-  ? (priority as string) 
-  : "MEDIUM";
+  const validPriority = ["LOW", "MEDIUM", "HIGH"].includes(priority || "")
+    ? (priority as string)
+    : "MEDIUM";
 
   try {
     await prisma.procurement.create({
@@ -79,6 +79,15 @@ export async function createProcurement(
         },
       },
     });
+
+    // Send email notification for new request
+    console.log(`📬 Triggering new procurement email for: ${title}`);
+    sendProcurementRequestEmail(
+      title,
+      totalAmount,
+      validPriority,
+      description
+    ).catch(err => console.error("Failed to send procurement email:", err));
 
     revalidatePath("/procurement");
     return { success: true };

@@ -3,10 +3,13 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import * as XLSX from "xlsx";
+import { getCurrentUser, requireRole } from "@/app/actions/auth";
 
 export type CreateProductState = {
   error?: string;
   success?: boolean;
+  message?: string;
+  status?: string;
 };
 
 export async function createProduct(
@@ -36,10 +39,26 @@ export async function createProduct(
     return { error: "Price must be a valid number ≥ 0" };
   }
 
+  // Get current user to determine status
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    return { error: "Unauthorized. Please login." };
+  }
+
+  // Check permission
+  if (!["STAFF", "MANAGER", "ADMIN"].includes(currentUser.role)) {
+    return { error: "Akses Ditolak: Anda tidak memiliki izin untuk melakukan aksi ini." };
+  }
+
   const org = await prisma.organization.findFirst();
   if (!org) {
     return { error: "No organization found. Please run seed first." };
   }
+
+  // Determine status based on role
+  const status = (currentUser.role === "MANAGER" || currentUser.role === "ADMIN")
+    ? "APPROVED"
+    : "PENDING";
 
   try {
     await prisma.product.create({
@@ -48,12 +67,18 @@ export async function createProduct(
         category,
         price: price != null ? price : undefined,
         stock,
+        status,
         organizationId: org.id,
       },
     });
 
     revalidatePath("/inventory");
-    return { success: true };
+
+    const message = status === "PENDING"
+      ? "Produk berhasil diajukan dan menunggu review Manager"
+      : "Produk berhasil ditambahkan";
+
+    return { success: true, message, status };
   } catch (e) {
     console.error("createProduct error:", e);
     return { error: "Failed to create product. Please try again." };
@@ -69,42 +94,40 @@ export async function updateProduct(
   _prevState: UpdateProductState | null,
   formData: FormData
 ): Promise<UpdateProductState> {
-  const id = formData.get("id")?.toString().trim();
-  if (!id) {
-    return { error: "Product ID is required" };
-  }
-
-  const name = formData.get("name")?.toString().trim();
-  const category = formData.get("category")?.toString().trim();
-  const priceStr = formData.get("price")?.toString().trim();
-  const stockStr = formData.get("stock")?.toString().trim();
-
-  if (!name) {
-    return { error: "Name is required" };
-  }
-
-  if (!category) {
-    return { error: "Category is required" };
-  }
-
-  const stock = stockStr ? parseInt(stockStr, 10) : 0;
-  if (isNaN(stock) || stock < 0) {
-    return { error: "Stock must be a valid number ≥ 0" };
-  }
-
-  const price = priceStr ? parseFloat(priceStr) : null;
-  if (priceStr && (isNaN(price!) || price! < 0)) {
-    return { error: "Price must be a valid number ≥ 0" };
-  }
-
   try {
+    // Require MANAGER role only for editing product master data
+    const currentUser = await requireRole(["MANAGER", "ADMIN"]);
+
+    const id = formData.get("id")?.toString().trim();
+    if (!id) {
+      return { error: "Product ID is required" };
+    }
+
+    const name = formData.get("name")?.toString().trim();
+    const category = formData.get("category")?.toString().trim();
+    const priceStr = formData.get("price")?.toString().trim();
+
+    if (!name) {
+      return { error: "Name is required" };
+    }
+
+    if (!category) {
+      return { error: "Category is required" };
+    }
+
+    const price = priceStr ? parseFloat(priceStr) : null;
+    if (priceStr && (isNaN(price!) || price! < 0)) {
+      return { error: "Price must be a valid number ≥ 0" };
+    }
+
+    // Update product - stock is NOT updated here
     await prisma.product.update({
       where: { id },
       data: {
         name,
         category,
         price: price != null ? price : null,
-        stock,
+        // Stock is intentionally excluded - must use Stock Adjustment
       },
     });
 
@@ -112,6 +135,9 @@ export async function updateProduct(
     return { success: true };
   } catch (e) {
     console.error("updateProduct error:", e);
+    if (e instanceof Error && e.message.includes("Akses Ditolak")) {
+      return { error: e.message };
+    }
     return { error: "Failed to update product. Please try again." };
   }
 }
@@ -134,6 +160,7 @@ export async function deleteProduct(formData: FormData): Promise<void> {
 export type ImportProductsState = {
   error?: string;
   success?: boolean;
+  message?: string;
 };
 
 // Helper function: case-insensitive column value getter
@@ -236,15 +263,15 @@ export async function importProducts(
       )?.toString().trim();
       const priceStr = (
         getCaseInsensitiveValue(rowData, "price") as
-          | number
-          | string
-          | undefined
+        | number
+        | string
+        | undefined
       )?.toString().trim();
       const stockStr = (
         getCaseInsensitiveValue(rowData, "stock") as
-          | number
-          | string
-          | undefined
+        | number
+        | string
+        | undefined
       )?.toString().trim();
 
       // Validate required fields
@@ -281,18 +308,73 @@ export async function importProducts(
       });
     }
 
-    // Insert all products
+    // Get current user to determine status
+    const currentUser = await getCurrentUser();
+    const status =
+      currentUser && ["MANAGER", "ADMIN"].includes(currentUser.role)
+        ? "APPROVED"
+        : "PENDING";
+
+    // Insert all products with appropriate status
     await prisma.product.createMany({
-      data: productsToCreate,
+      data: productsToCreate.map((p) => ({ ...p, status })),
       skipDuplicates: true,
     });
 
     revalidatePath("/inventory");
-    return { success: true };
+    revalidatePath("/approvals");
+
+    const message =
+      status === "PENDING"
+        ? `Import berhasil. ${productsToCreate.length} produk menunggu approval Manager.`
+        : `Import berhasil. ${productsToCreate.length} produk ditambahkan.`;
+
+    return { success: true, message };
   } catch (e) {
     console.error("importProducts error:", e);
     const message =
       e instanceof Error ? e.message : "Failed to import products";
     return { error: `Import failed: ${message}` };
+  }
+}
+
+export type ApproveProductState = {
+  error?: string;
+  success?: boolean;
+  message?: string;
+};
+
+/**
+ * Approve a pending product (MANAGER/ADMIN only)
+ * Changes product status from PENDING to APPROVED
+ */
+export async function approveProduct(
+  _prevState: ApproveProductState | null,
+  formData: FormData
+): Promise<ApproveProductState> {
+  const id = formData.get("id")?.toString().trim();
+
+  if (!id) {
+    return { error: "Product ID required" };
+  }
+
+  try {
+    // Require MANAGER or ADMIN role
+    await requireRole(["MANAGER", "ADMIN"]);
+
+    // Update product status to APPROVED
+    await prisma.product.update({
+      where: { id },
+      data: { status: "APPROVED" },
+    });
+
+    revalidatePath("/inventory");
+    return { success: true, message: "Produk berhasil di-approve" };
+  } catch (e) {
+    console.error("approveProduct error:", e);
+    if (e instanceof Error && e.message.includes("Akses Ditolak")) {
+      return { error: e.message };
+    }
+    return { error: "Failed to approve product" };
   }
 }

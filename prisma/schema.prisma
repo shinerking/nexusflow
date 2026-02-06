@@ -15,12 +15,29 @@ enum Role {
   ADMIN
   MANAGER
   STAFF
+  AUDITOR
 }
 
 enum ProcurementStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+enum ProductStatus {
+  PENDING
+  APPROVED
+}
+
+enum StockAdjustmentType {
+  IN   // Restock/Barang Masuk
+  OUT  // Reduction/Barang Keluar
+}
+
+enum StockAdjustmentStatus {
+  APPROVED  // Auto-approved or manager-approved
+  PENDING   // Waiting manager approval
+  REJECTED  // Rejected by manager
 }
 
 model Organization {
@@ -35,32 +52,37 @@ model Organization {
 }
 
 model User {
-  id             String       @id @default(cuid())
-  name           String
-  email          String
-  role           Role
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  id                 String       @id @default(cuid())
+  name               String
+  email              String
+  role               Role         @default(STAFF)
+  emailNotifications Boolean      @default(true)
+  organizationId     String
+  organization       Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  stockLogs          StockLog[]
 
   @@unique([email, organizationId])
   @@index([organizationId])
 }
 
 model Product {
-  id             String       @id @default(cuid())
+  id             String        @id @default(cuid())
   name           String
-  price          Decimal?     @db.Decimal(10, 2)
-  stock          Int          @default(0)
+  price          Decimal?      @db.Decimal(10, 2)
+  stock          Int           @default(0)
   category       String
+  status         ProductStatus @default(PENDING)
   organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  stockLogs      StockLog[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
   @@index([organizationId])
   @@index([category])
+  @@index([status])
 }
 
 model Procurement {
@@ -77,4 +99,27 @@ model Procurement {
 
   @@index([organizationId])
   @@index([status])
+}
+
+model StockLog {
+  id              String                 @id @default(cuid())
+  userId          String
+  productId       String
+  type            StockAdjustmentType
+  quantity        Int
+  reason          String
+  notes           String?
+  status          StockAdjustmentStatus  @default(PENDING)
+  approvedBy      String?
+  rejectionReason String?
+  rejectedBy      String?
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+  
+  product         Product                @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user            User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([productId])
+  @@index([status])
+  @@index([createdAt])
 }

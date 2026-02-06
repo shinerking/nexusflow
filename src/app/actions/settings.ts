@@ -17,6 +17,8 @@ export async function updateSettings(
   const name = formData.get("name")?.toString().trim();
   const organizationName = formData.get("organizationName")?.toString().trim();
 
+  const emailNotifications = formData.get("emailNotifications") === "true";
+
   if (!userId) {
     return { error: "User ID is required" };
   }
@@ -32,7 +34,11 @@ export async function updateSettings(
   try {
     await prisma.user.update({
       where: { id: userId },
-      data: { name },
+      data: {
+        name,
+        // @ts-ignore - Ignore TS error if client type isn't regenerated yet
+        emailNotifications,
+      },
     });
 
     if (orgId && organizationName) {

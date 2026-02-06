@@ -20,23 +20,57 @@ async function main() {
   });
   console.log("[OK] Organization created:", org.name);
 
-  // 2. User (ADMIN) linked to organization
-  const user = await prisma.user.upsert({
+  // 2. Create 3 demo users with different roles
+  const adminUser = await prisma.user.upsert({
     where: {
       email_organizationId: {
-        email: "admin@democorp.com",
+        email: "admin@nexusflow.com",
         organizationId: org.id,
       },
     },
     update: {},
     create: {
-      name: "Admin User",
-      email: "admin@democorp.com",
-      role: "ADMIN",
+      name: "Admin Manager",
+      email: "admin@nexusflow.com",
+      role: "MANAGER",
       organizationId: org.id,
     },
   });
-  console.log("[OK] User created:", user.name, `(${user.email})`);
+  console.log("[OK] User created:", adminUser.name, `(${adminUser.email}) - Role: ${adminUser.role}`);
+
+  const staffUser = await prisma.user.upsert({
+    where: {
+      email_organizationId: {
+        email: "staff@nexusflow.com",
+        organizationId: org.id,
+      },
+    },
+    update: {},
+    create: {
+      name: "Staff User",
+      email: "staff@nexusflow.com",
+      role: "STAFF",
+      organizationId: org.id,
+    },
+  });
+  console.log("[OK] User created:", staffUser.name, `(${staffUser.email}) - Role: ${staffUser.role}`);
+
+  const auditorUser = await prisma.user.upsert({
+    where: {
+      email_organizationId: {
+        email: "auditor@nexusflow.com",
+        organizationId: org.id,
+      },
+    },
+    update: {},
+    create: {
+      name: "Auditor User",
+      email: "auditor@nexusflow.com",
+      role: "AUDITOR",
+      organizationId: org.id,
+    },
+  });
+  console.log("[OK] User created:", auditorUser.name, `(${auditorUser.email}) - Role: ${auditorUser.role}`);
 
   // Clear existing products and procurements for Demo Corp (for re-seeding)
   await prisma.procurement.deleteMany({ where: { organizationId: org.id } });
@@ -74,6 +108,7 @@ async function main() {
           category: p.category,
           price: p.price,
           stock: randomInt(5, 150),
+          status: "APPROVED", // All seed products are pre-approved
           organizationId: org.id,
         },
       })

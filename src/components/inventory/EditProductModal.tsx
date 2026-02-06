@@ -35,7 +35,7 @@ export default function EditProductModal({ product }: { product: Product }) {
 
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm shadow-xl"
           aria-modal="true"
           role="dialog"
           aria-labelledby="edit-modal-title"
@@ -45,18 +45,18 @@ export default function EditProductModal({ product }: { product: Product }) {
             aria-hidden
             onClick={() => setOpen(false)}
           />
-          <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 shadow-xl">
+          <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900">
             <div className="mb-4 flex items-center justify-between">
               <h2
                 id="edit-modal-title"
-                className="text-lg font-semibold text-slate-900"
+                className="text-lg font-semibold text-slate-900 dark:text-white"
               >
                 Edit Product
               </h2>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-200"
                 aria-label="Close modal"
               >
                 <X className="h-5 w-5" aria-hidden />
@@ -135,7 +135,7 @@ export default function EditProductModal({ product }: { product: Product }) {
                   htmlFor={`edit-stock-${product.id}`}
                   className="mb-1 block text-sm font-medium text-slate-700"
                 >
-                  Stock
+                  Stock (Read-Only)
                 </label>
                 <input
                   id={`edit-stock-${product.id}`}
@@ -144,16 +144,20 @@ export default function EditProductModal({ product }: { product: Product }) {
                   min="0"
                   defaultValue={product.stock}
                   placeholder="0"
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
-                  disabled={isPending}
+                  className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500 cursor-not-allowed dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400"
+                  disabled={true}
+                  readOnly
                 />
+                <p className="mt-1 text-xs text-amber-600">
+                  ⚠️ Perubahan stok wajib melalui menu Stock Adjustment
+                </p>
               </div>
 
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                  className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
                   disabled={isPending}
                 >
                   Cancel
