@@ -13,7 +13,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
 
-[Demo](#-screenshot) • [Fitur](#-fitur-utama) • [Instalasi](#-instalasi) • [Tech Stack](#-tech-stack)
+[Demo](https://nexusflow-xlih.vercel.app/login) • [Fitur](#-fitur-utama) • [Instalasi](#-instalasi) • [Tech Stack](#-tech-stack)
 
 </div>
 
@@ -236,7 +236,7 @@ Dibuat dengan ❤️ oleh **Abimanyu R Putra**
 
 **⭐ Jangan lupa beri star pada repository ini jika bermanfaat! ⭐**
 
-Made by NexusFlow Team
+Made by ARP 
 
 </div>
 
