@@ -7,7 +7,7 @@ import { useActionState, useEffect } from "react";
 export default function ApproveProductButton({ productId }: { productId: string }) {
     const [state, formAction, isPending] = useActionState<ApproveProductState, FormData>(
         approveProduct,
-        null
+        null as any
     );
 
     useEffect(() => {

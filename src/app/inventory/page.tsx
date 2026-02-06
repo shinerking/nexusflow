@@ -71,7 +71,7 @@ export default async function InventoryPage() {
         {/* Stock Adjustment History */}
         <RoleGuard userRole={currentUser?.role} action="VIEW_STOCK_LOGS">
           <div className="mt-8">
-            <StockLogsTable stockLogs={stockLogs} currentUser={currentUser} />
+            <StockLogsTable stockLogs={stockLogs as any} currentUser={currentUser} />
           </div>
         </RoleGuard>
       </div>
