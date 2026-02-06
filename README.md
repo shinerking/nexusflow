@@ -103,7 +103,7 @@ Pastikan Anda telah menginstall:
 
 #### 1️⃣ Clone Repository
 ```bash
-git clone https://github.com/username/nexusflow.git
+git clone https://github.com/shinerking/nexusflow.git
 cd nexusflow
 ```
 
