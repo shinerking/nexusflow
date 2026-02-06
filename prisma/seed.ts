@@ -159,7 +159,7 @@ async function main() {
           status: p.status,
           totalAmount: p.totalAmount,
           organizationId: org.id,
-          aiAnalysis: p.status === "APPROVED" ? { recommended: true, score: 0.92 } : null,
+          aiAnalysis: p.status === "APPROVED" ? { recommended: true, score: 0.92 } : null as any,
         },
       })
     )
