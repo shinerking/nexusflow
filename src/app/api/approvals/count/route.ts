@@ -1,19 +1,10 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser } from "@/app/actions/auth";
-import { getPendingApprovals } from "@/app/actions/approval";
+import { getPendingApprovalsCount } from "@/app/actions/approval";
 
 export async function GET() {
     try {
-        const currentUser = await getCurrentUser();
-
-        // Only MANAGER/ADMIN can see count
-        if (!currentUser || !["MANAGER", "ADMIN"].includes(currentUser.role)) {
-            return NextResponse.json({ count: 0 });
-        }
-
-        const data = await getPendingApprovals();
-
-        return NextResponse.json({ count: data.totalCount });
+        const count = await getPendingApprovalsCount();
+        return NextResponse.json({ count });
     } catch (e) {
         console.error("Approval count API error:", e);
         return NextResponse.json({ count: 0 });

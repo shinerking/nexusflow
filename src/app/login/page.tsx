@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import LoginForm from "@/components/auth/LoginForm";
 
 export default function LoginPage() {
@@ -58,7 +59,9 @@ export default function LoginPage() {
           </div>
 
           {/* Login Form */}
-          <LoginForm />
+          <Suspense fallback={<div className="h-64 animate-pulse rounded-xl bg-white/5" />}>
+            <LoginForm />
+          </Suspense>
 
           {/* Watermark */}
           <div className="fixed bottom-2 md:bottom-2 left-0 right-0 flex justify-center pointer-events-none px-4 z-50">

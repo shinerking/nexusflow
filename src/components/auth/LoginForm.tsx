@@ -1,7 +1,9 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
+import { useSearchParams } from "next/navigation";
 import { login } from "@/app/actions/auth";
+import { AlertCircle } from "lucide-react";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -63,8 +65,23 @@ function SubmitButton() {
 }
 
 export default function LoginForm() {
+  const searchParams = useSearchParams();
+  const status = searchParams.get("status");
+  const message = searchParams.get("message");
+
   return (
     <form action={login} className="space-y-5">
+      {status === "error" && (
+        <div className="flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400 backdrop-blur-sm">
+          <AlertCircle className="h-4 w-4 shrink-0" />
+          <p>
+            {message === "user_not_found"
+              ? "Akun tidak ditemukan. Pastikan email benar."
+              : "Terjadi kesalahan saat login."}
+          </p>
+        </div>
+      )}
+
       <div className="space-y-2">
         <label
           htmlFor="email"
@@ -95,7 +112,7 @@ export default function LoginForm() {
             name="email"
             type="email"
             required
-            placeholder="admin@democorp.com"
+            placeholder="admin@nexusflow.com"
             className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-11 pr-4 text-sm text-white placeholder-slate-400 backdrop-blur-sm transition-all duration-300 focus:border-blue-500/50 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-500/30 sm:text-base"
             autoComplete="email"
           />
@@ -106,9 +123,20 @@ export default function LoginForm() {
 
       {/* Demo Credentials Hint */}
       <div className="rounded-lg border border-blue-500/20 bg-blue-500/5 p-3 backdrop-blur-sm">
-        <p className="text-xs text-slate-300 sm:text-sm">
-          <span className="font-semibold text-blue-300">Demo:</span> admin@democorp.com
-        </p>
+        <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-blue-300/80 sm:text-[10px]">
+          Demo Credentials
+        </h4>
+        <div className="space-y-1.5">
+          <p className="text-xs text-slate-300 sm:text-sm">
+            <span className="font-semibold text-blue-300">Admin:</span> admin@nexusflow.com
+          </p>
+          <p className="text-xs text-slate-300 sm:text-sm">
+            <span className="font-semibold text-blue-300">Staff:</span> staff@nexusflow.com
+          </p>
+          <p className="text-xs text-slate-400 sm:text-sm">
+            <span className="font-semibold text-blue-300">Auditor:</span> auditor@nexusflow.com
+          </p>
+        </div>
       </div>
     </form>
   );

@@ -16,7 +16,7 @@ export async function login(formData: FormData): Promise<never> {
   const email = formData.get("email")?.toString().trim();
 
   if (!email) {
-    redirect("/login");
+    redirect("/login?status=error&message=email_required");
   }
 
   // Find user in database
@@ -25,8 +25,8 @@ export async function login(formData: FormData): Promise<never> {
   });
 
   if (!user) {
-    // For demo: if user not found, redirect back to login
-    redirect("/login");
+    // Redirect with error message for demo purposes if user not found
+    redirect("/login?status=error&message=user_not_found");
   }
 
   // Store email in session cookie

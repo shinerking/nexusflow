@@ -28,11 +28,13 @@ async function main() {
         organizationId: org.id,
       },
     },
-    update: {},
+    update: {
+      role: "ADMIN", // Ensure high-level role
+    },
     create: {
       name: "Admin Manager",
       email: "admin@nexusflow.com",
-      role: "MANAGER",
+      role: "ADMIN",
       organizationId: org.id,
     },
   });

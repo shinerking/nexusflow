@@ -23,33 +23,66 @@ export type PendingApprovalsData = {
 };
 
 /**
+ * Get count of all pending approvals (products and stock adjustments)
+ * Lightweight function for badges/notifications
+ */
+export async function getPendingApprovalsCount(): Promise<number> {
+    try {
+        const currentUser = await getCurrentUser();
+        if (!currentUser || !["MANAGER", "ADMIN"].includes(currentUser.role)) {
+            return 0;
+        }
+
+        const [productCount, stockCount] = await Promise.all([
+            prisma.product.count({
+                where: { status: "PENDING", organizationId: currentUser.organizationId },
+            }),
+            prisma.stockLog.count({
+                where: {
+                    status: "PENDING",
+                    product: { organizationId: currentUser.organizationId }
+                },
+            }),
+        ]);
+
+        return productCount + stockCount;
+    } catch (e) {
+        console.error("getPendingApprovalsCount error:", e);
+        return 0;
+    }
+}
+
+/**
  * Get all pending approvals (products and stock adjustments)
  * Permission: MANAGER, ADMIN only
  */
 export async function getPendingApprovals(): Promise<PendingApprovalsData> {
     try {
-        await requireRole(["MANAGER", "ADMIN"]);
+        const currentUser = await requireRole(["MANAGER", "ADMIN"]);
 
         // Fetch pending products
         const pendingProducts = await prisma.product.findMany({
             where: {
                 status: "PENDING",
+                organizationId: currentUser.organizationId,
             },
             orderBy: {
                 createdAt: "desc",
             },
         });
 
-        // Fetch pending stock adjustments
+        // Fetch pending stock adjustments with user info joined
         const pendingStockAdjustments = await prisma.stockLog.findMany({
             where: {
                 status: "PENDING",
+                product: { organizationId: currentUser.organizationId }
             },
             include: {
+                user: {
+                    select: { name: true },
+                },
                 product: {
-                    select: {
-                        name: true,
-                    },
+                    select: { name: true },
                 },
             },
             orderBy: {
@@ -57,23 +90,13 @@ export async function getPendingApprovals(): Promise<PendingApprovalsData> {
             },
         });
 
-        // Fetch all users for name mapping
-        const users = await prisma.user.findMany({
-            select: {
-                id: true,
-                name: true,
-            },
-        });
-
-        const userMap = new Map(users.map((u) => [u.id, u.name]));
-
         // Transform pending products
         const productItems: ApprovalItem[] = pendingProducts.map((p) => ({
             id: p.id,
             type: "PRODUCT" as const,
             date: p.createdAt,
             actionType: "New Product",
-            staffId: "", // Products don't have userId, set empty
+            staffId: "",
             staffName: "System",
             productName: p.name,
             quantity: p.stock,
@@ -88,7 +111,7 @@ export async function getPendingApprovals(): Promise<PendingApprovalsData> {
             date: s.createdAt,
             actionType: s.type === "IN" ? "Restock" : "Stock Reduction",
             staffId: s.userId,
-            staffName: userMap.get(s.userId) || "Unknown",
+            staffName: s.user.name || "Unknown",
             productName: s.product.name,
             quantity: s.quantity,
             reason: s.reason,
